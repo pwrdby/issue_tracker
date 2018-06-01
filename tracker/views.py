@@ -9,6 +9,7 @@ from django.views import generic
 from django.db.models import Avg, Max, Min
 
 from tracker.models import Category, Issue
+from tracker.forms import CategoryForm
 
 
 def user_login(request):
@@ -24,7 +25,7 @@ def user_login(request):
             login(request, user)
             if request.GET.get('next', None):
                 return HttpResponseRedirect(request.GET['next'])
-            return HttpResponseRedirect(reverse('tracker:index'))
+            return HttpResponseRedirect(reverse('tracker:index', args=['all']))
         else:
             context["error"] = "Provide valid credentials !!"
             return render(request, "tracker/auth/login.html", context)
@@ -36,7 +37,19 @@ def user_logout(request):
     Logout user.
     """
     logout(request)
-    return HttpResponseRedirect(reverse('tracker:index'))
+    return HttpResponseRedirect(reverse('tracker:index',  args=['all']))
+
+
+def change_category(request):
+    """
+    Call IssueView with choosen category.
+    """
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            url_path = form.data['current_category']
+            return HttpResponseRedirect(reverse('tracker:index',  args=[url_path]))
+
 
 class IssueView(generic.ListView):
     """
@@ -50,6 +63,20 @@ class IssueView(generic.ListView):
         Return all issues.
         """
         return Issue.objects.all()
+        
+    def get(self, *args, **kwargs):
+        """
+        Overriden get method for listView.
+        """
+        cat_name = self.request.path.split('/')[-1]
+        if cat_name != 'all':
+            cat = Category.objects.get(name=cat_name)
+            self.object_list = Issue.objects.filter(category=cat)
+        else:
+            self.object_list = self.get_queryset()
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
 
     def get_context_data(self, **kwargs):
         """
@@ -63,7 +90,7 @@ class IssueView(generic.ListView):
         context['max'] = objs(Max(attr)).get(f"{attr}__max")
         context['min'] = objs(Min(attr)).get(f"{attr}__min")
         context['user'] = username=self.request.user
-        print(dir(context['user']))
+        context['form'] = CategoryForm()
 
         return context
 

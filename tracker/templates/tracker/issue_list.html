@@ -1,12 +1,13 @@
 {% extends "tracker/index.html" %}
 
-
-
-{% if user.is_staff %}
-<p>stary buzerant</p>
-{% endif %}
-
 {% block content %}
+
+<form action="{% url 'tracker:change_cat' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
+
 <p>{{ user.is_superuser }}</p>
     <div>
         <h2>Issue statistic</h2>
