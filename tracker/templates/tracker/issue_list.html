@@ -1,0 +1,45 @@
+{% extends "tracker/index.html" %}
+
+
+
+{% if user.is_staff %}
+<p>stary buzerant</p>
+{% endif %}
+
+{% block content %}
+<p>{{ user.is_superuser }}</p>
+    <div>
+        <h2>Issue statistic</h2>
+        <p>Average time spent on issue: {{ avg }}</p>
+        <p>Maximum time spent on issue: {{ max }}</p>
+        <p>Minimum time spent on issue: {{ min }}</p>
+    </div>
+    {% if issues %}
+    <table class="blueTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Reporter</th>
+                <th>Assignee</th>
+                <th>State</th>
+                <th>Spent/Total Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    {% for issue in issues %}
+        <tbody>
+            <tr>
+                <td>{{ issue.name }}</td>
+                <td>{{ issue.reporter }}</td>
+                <td>{{ issue.assignee }}</td>
+                <td>{{ issue.get_state_name }}</td>
+                <td>{{ issue.worked_time }} / {{ issue.total_time }}</td>
+                <td><button><a href="{% url 'tracker:detail' issue.id %}">Detail</a></button></td>
+            </tr>
+        </tbody>
+    {% endfor %}
+    </table>
+    {% else %}
+        <p>No issues are available.</p>
+    {% endif %}
+{% endblock %}

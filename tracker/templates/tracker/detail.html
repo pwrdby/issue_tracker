@@ -1,0 +1,9 @@
+{% extends "tracker/index.html" %}
+
+{% block content %}
+    <h1 >{{ issue.name }}</h1>
+    <p> {{ issue.description }}</p>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% endblock %}
+
