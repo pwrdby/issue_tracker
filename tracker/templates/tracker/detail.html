@@ -1,8 +1,21 @@
 {% extends "tracker/index.html" %}
 
 {% block content %}
-    <h1 >{{ issue.name }}</h1>
-    <p> {{ issue.description }}</p>
+
+    <h2>Detail issue</h2>
+    <p><strong>Name:</strong> {{ issue.name }}</p>
+    <p><strong>description:</strong> {{ issue.description }}</p>
+    <p><strong>Reporter:</strong> {{ issue.report }}</p>
+    <p><strong>Assignee:</strong> {{ issue.assignee }}</p>
+    <p><strong>State:</strong> {{ issue.get_state_name }}</p>
+    <p><strong>Category:</strong> {{ issue.category }}</p>
+    <p><strong>Time spent/total:</strong> {{ issue.worked_time }}/{{issue.total_time}}</p>
+    <p><strong>Issue created:</strong> {{ issue.created }}</p>
+    <p><strong>Last update:</strong> {{ issue.updated }}</p>
+
+    {% if user.is_superuser %}
+        <button><a href="{{ detail_url }}" target="_blank">Edit issue</a></button>
+    {% endif %}
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 {% endblock %}

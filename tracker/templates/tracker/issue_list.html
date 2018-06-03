@@ -8,7 +8,9 @@
     <input type="submit" value="Submit" />
 </form>
 
-<p>{{ user.is_superuser }}</p>
+{% if user.is_superuser %}
+<button><a href="../admin/tracker/issue/add/ " target="_blank">Add issue</a></button>
+{% endif %}
     <div>
         <h2>Issue statistic</h2>
         <p>Average time spent on issue: {{ avg }}</p>

@@ -89,7 +89,7 @@ class IssueView(generic.ListView):
         context['avg'] = objs(Avg(attr)).get(f"{attr}__avg")
         context['max'] = objs(Max(attr)).get(f"{attr}__max")
         context['min'] = objs(Min(attr)).get(f"{attr}__min")
-        context['user'] = username=self.request.user
+        context['user'] = self.request.user
         context['form'] = CategoryForm()
 
         return context
@@ -101,6 +101,16 @@ class DetailView(generic.DetailView):
     """
     model = Issue
     template_name = "tracker/detail.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        Add own context data for template.
+        """
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['detail_url'] = f"../../admin/tracker/issue/{context['issue'].id}/change/"
+
+        return context
 
 
 

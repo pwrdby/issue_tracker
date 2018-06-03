@@ -19,7 +19,7 @@ from django.urls import path, include
 from tracker.views import user_login, user_logout
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('tracker/', include('tracker.urls')),
 
     path('login/', user_login, name='login'),
