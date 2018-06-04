@@ -70,6 +70,8 @@ class IssueView(generic.ListView):
         Overriden get method for listView.
         """
         cat_name = self.request.path.split('/')[-1]
+        if cat_name == "":
+            return HttpResponseRedirect(reverse('tracker:index',  args=['all']))
         if cat_name != 'all':
             try:
                 cat = Category.objects.get(name=cat_name)
@@ -119,24 +121,3 @@ class DetailView(generic.DetailView):
         context['detail_url'] = f"../../admin/tracker/issue/{context['issue'].id}/change/"
 
         return context
-
-
-
-def update(request, category_id):
-    """
-    Update category
-    """
-    category = get_object_or_404(Category, id=category_id)
-    try:
-        new_description = request.POST['description']
-        print(new_description)
-    except KeyError:
-        render(request, 'tracker/detail.html', {
-            'category': category,
-            'error_message': "You didn't fill a new description"
-            })
-    else:
-        category.description = new_description
-        category.save()
-
-        return HttpResponseRedirect(reverse('tracker:index'))
