@@ -2,16 +2,51 @@
 
 {% block content %}
 
-    <h2>Detail issue</h2>
-    <p><strong>Name:</strong> {{ issue.name }}</p>
-    <p><strong>description:</strong> {{ issue.description }}</p>
-    <p><strong>Reporter:</strong> {{ issue.report }}</p>
-    <p><strong>Assignee:</strong> {{ issue.assignee }}</p>
-    <p><strong>State:</strong> {{ issue.get_state_name }}</p>
-    <p><strong>Category:</strong> {{ issue.category }}</p>
-    <p><strong>Time spent/total:</strong> {{ issue.worked_time }}/{{issue.total_time}}</p>
-    <p><strong>Issue created:</strong> {{ issue.created }}</p>
-    <p><strong>Last update:</strong> {{ issue.updated }}</p>
+    <h2>Issue details</h2>
+    <table class="detailTable">
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="attr">Name</td>
+                <td>{{ issue.name }}</td>
+            </tr>
+            <tr>
+                <td class="attr">Description</td>
+                <td>{{ issue.description }}</td>
+            </tr>
+            <tr>
+                <td class="attr">Reporter</td>
+                <td>{{ issue.reporter }}</td>
+            </tr>
+            <tr>
+                <td class="attr">Assignee</td>
+                <td>{{ issue.assignee }}</td>
+            </tr>
+            <tr>
+                <td class="attr">State</td>
+                <td>{{ issue.get_state_name }}</td>
+            </tr>
+            <tr>
+                <td class="attr">Category</td>
+                <td>{{ issue.category }}</td>
+            </tr>
+            <tr>
+                <td class="attr">Spent/Estimate time [h]</td>
+                <td>{{ issue.worked_time }}/{{issue.total_time}}</td>
+            </tr>            <tr>
+                <td class="attr">Issue created</td>
+                <td>{{ issue.created }}</td>
+            </tr>            <tr>
+                <td class="attr">Last update</td>
+                <td>{{ issue.updated }}</td>
+            </tr>
+        </tbody>
+    </table> 
 
     {% if user.is_superuser %}
         <button><a href="{{ detail_url }}" target="_blank">Edit issue</a></button>

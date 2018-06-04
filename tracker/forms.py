@@ -9,15 +9,21 @@ class CategoryForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         """
+        Init for this form. Create choices from issue categories.
         """
         super().__init__(*args, **kwargs)
         # print(dir(self.fields['current_category']))
         choices = [(cat.name, cat.name) for cat in Category.objects.all()]
+        choices = [('all', '---')] + choices
         # choices = (('aa', ''))
-        self.fields['current_category'] = forms.ChoiceField(choices=choices,required=False)
+        self.fields['current_category'] = forms.ChoiceField(choices=choices, required=False, 
+                                                            label="Showing category is:")
 
 
 class CategoryAdminForm(forms.ModelForm):
+    """
+    Change field for descrption in administration.
+    """
     class Meta:
             model = Category
             widgets = {

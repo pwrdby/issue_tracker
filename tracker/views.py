@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.db.models import Avg, Max, Min
+from django.core.exceptions import ObjectDoesNotExist
 
 from tracker.models import Category, Issue
 from tracker.forms import CategoryForm
@@ -70,11 +71,15 @@ class IssueView(generic.ListView):
         """
         cat_name = self.request.path.split('/')[-1]
         if cat_name != 'all':
-            cat = Category.objects.get(name=cat_name)
-            self.object_list = Issue.objects.filter(category=cat)
+            try:
+                cat = Category.objects.get(name=cat_name)
+                self.object_list = Issue.objects.filter(category=cat)
+            except ObjectDoesNotExist:
+                self.object_list = []
         else:
             self.object_list = self.get_queryset()
         context = self.get_context_data()
+        context['form'].fields['current_category'].initial = cat_name
         return self.render_to_response(context)
 
 
@@ -84,11 +89,14 @@ class IssueView(generic.ListView):
         """
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        objs = Issue.objects.all().aggregate
-        attr = 'worked_time'
-        context['avg'] = objs(Avg(attr)).get(f"{attr}__avg")
-        context['max'] = objs(Max(attr)).get(f"{attr}__max")
-        context['min'] = objs(Min(attr)).get(f"{attr}__min")
+
+        if self.object_list:
+            objs = self.object_list.aggregate
+            attr = 'worked_time'
+            context['avg'] = round(objs(Avg(attr)).get(f"{attr}__avg"), 2)
+            context['max'] = round(objs(Max(attr)).get(f"{attr}__max"), 2)
+            context['min'] = round(objs(Min(attr)).get(f"{attr}__min"), 2)
+
         context['user'] = self.request.user
         context['form'] = CategoryForm()
 

@@ -1,4 +1,8 @@
-<form method="POST">
+{% extends "tracker/index.html" %}
+
+{% block content %}
+
+<form id="login" method="POST">
     {% csrf_token %}
     <table>
         <tr>
@@ -14,3 +18,4 @@
     </table>
     <button type="submit">Login</button>
 </form>
+{% endblock %}
