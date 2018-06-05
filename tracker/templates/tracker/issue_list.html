@@ -4,9 +4,9 @@
 
     <div class="statistic">
         <h2>Issues statistics</h2>
-        <p>Average time spent on issue: {{ avg }}</p>
-        <p>Maximum time spent on issue: {{ max }}</p>
-        <p>Minimum time spent on issue: {{ min }}</p>
+        <p>Average time spent on issue: {{ avg }}h</p>
+        <p>Maximum time spent on issue: {{ max }}h</p>
+        <p>Minimum time spent on issue: {{ min }}h</p>
     </div>
     <form action="{% url 'tracker:change_cat' %}" method="post">
         {% csrf_token %}
@@ -37,7 +37,7 @@
                 <td>{{ issue.reporter }}</td>
                 <td>{{ issue.assignee }}</td>
                 <td>{{ issue.get_state_name }}</td>
-                <td>{{ issue.worked_time }} / {{ issue.total_time }}</td>
+                <td>{{ issue.worked_time }} / {{ issue.estimate_time }}</td>
                 <td><button><a href="{% url 'tracker:detail' issue.id %}">Detail</a></button></td>
             </tr>
         </tbody>

@@ -43,7 +43,7 @@ class Issue(models.Model):
         choices=STATE_CHOICES,
         default=CONCEPT)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    total_time = models.FloatField(default=0.0)
+    estimate_time = models.FloatField(default=0.0)
     worked_time = models.FloatField(default=0.0)
     created = models.DateTimeField(editable=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
